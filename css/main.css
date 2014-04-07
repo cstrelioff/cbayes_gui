@@ -1,0 +1,139 @@
+/*
+      Heavly modified, but original css camre from:
+    
+      Created by Keith Donegan of Code-Sucks.com
+	  http://www.code-sucks.com
+	  
+*/
+
+* { padding: 0; margin: 0; }
+
+body {
+ font-family: Arial, Helvetica, sans-serif;
+ font-size: 13px;
+}
+#wrapper { 
+ margin: 0 auto;
+ width: 922px;
+}
+#header {
+ width: 900px;
+ color: #333;
+ padding: 10px;
+ border: 1px solid #ccc;
+ height: 50px;
+ margin: 10px 0px 5px 0px;
+ background: #DAC8BF;
+ font-size: 40px;
+ font-weight:bold;
+ color:#333;
+ text-align:left;
+ text-transform:uppercase;
+}
+#navigation {
+  width: 900px;
+  color: #333;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin: 0px 0px 5px 0px;
+  background: #BD9C8C;
+}
+#content {
+ width: 900px;
+ color: #333;
+ border: 1px solid #ccc;
+ background: #F2F2E6;
+ margin: 0px 0px 5px 0px;
+ padding: 10px;
+ text-align: center;
+}
+#shutdown {
+ color:#FF0000;
+}
+/*
+ * Navigation Style
+ */
+div.nav {
+}
+div.nav ul
+{
+  list-style-type:none;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+}
+div.nav li
+{
+  float:left;
+}
+div.nav a:link, div.nav a:visited
+{
+  display:block;
+  width:90px;
+  font-weight:bold;
+  color:#333;
+  text-align:center;
+  padding:2px;
+  text-decoration:none;
+  text-transform:uppercase;
+}
+div.nav a:hover, div.nav a:active
+{
+  color: #FFFFFF;
+}
+
+/*
+ * image gallery
+ */
+div.img {
+  margin:5px;
+  padding: 5px;
+  border:1px solid #000000;
+  height:100%;
+  min-width:200px;
+  text-align:center;
+}
+div.img img {
+  /*display:inline;*/
+  max-height: 500px;
+  margin:5px;
+  border:1px solid #ffffff;
+}
+div.img a:hover img {
+  border:1px solid #0000ff;
+}
+div.desc {
+  text-align:center;
+  font-weight:bold;
+ /* width:auto;*/
+  margin:5px;
+}
+
+/*
+ *  for cool tables 
+ */
+.hoverTable {
+  width:100%; 
+  border-collapse:collapse; 
+  font-weight:bold;
+  color:#333;
+  text-align:left;
+}
+.hoverTable a {
+  font-weight:bold;
+  color:#333;
+  padding:4px;
+  text-decoration:none;
+  text-transform:uppercase;
+}
+.hoverTable a {
+  background: #F2F2E6;
+}
+.hoverTable a:hover {
+  background: #DAC8BF;
+}
+.hoverTable td{ 
+  padding:7px;
+  border: 1px solid #ccc;
+}
+
