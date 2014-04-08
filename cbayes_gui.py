@@ -198,19 +198,18 @@ class Root(object):
         colors = iter(cm.terrain(np.linspace(0, 1, number_models)))
         
         # make stacked bar plot
-        width = 1.0      # the width of the bars: can also be len(x) sequence
-        ind = np.arange(number_dirs) # [n for n in range(number_dirs)]
+        ind = np.arange(1, number_dirs + 1)
        
         fig = plt.figure()
         ax  = fig.add_subplot(111)
 
         plots = []
         for n, em in enumerate(topmodels):
-            plots.append(ax.bar(ind + width/2., data[n], bottom=baseline[n],
-                                 color=next(colors)))
+            plots.append(ax.bar(ind, data[n], bottom=baseline[n],
+                align='center', alpha=0.75, color=next(colors)))
         
         plt.ylabel('Probabilities')
-        plt.xticks(ind +width/2., segment_labels, rotation=45)
+        plt.xticks(ind, segment_labels, rotation=25)
         plt.yticks([0., 0.25, 0.5, 0.75, 1.0])
         colors = [p[0] for p in plots]
         # modify axis to fit legend
