@@ -320,9 +320,21 @@ class Root(object):
         mname = "n{}_k{}_id{}".format(n, k, id)
         machine.set_name(mname)
 
+        # get appropriate data range for inference
+        temp = inferdir.split('_')[1].split('-')
+        start = int(temp[0])
+        end = int(temp[1])
+
+        if start == 0 and end == 0:
+            datainfer = None
+        else:
+            data = cbayes.read_datafile(os.path.join(self.directory,
+                'datafile'))
+            datainfer = data[start:end]
+
         # generate inferEM instance
         data = cbayes.read_datafile(os.path.join(self.directory, 'datafile'))
-        inferem = bayesem.InferEM(machine, data)
+        inferem = bayesem.InferEM(machine, datainfer)
         pm_machines = inferem.get_PM_machines()
         
         # get startnode probabilities
