@@ -32,12 +32,156 @@ import cmpy.inference.bayesianem as bayesem
 import cmpy.orderlygen.pyicdfa as pyidcdfa
 
 import cbayes
-import datautils
 
 # set lookup directory for templates
 filepath = os.path.dirname(os.path.realpath(__file__))
 lookup = TemplateLookup(directories=[os.path.join(filepath,'html')])
 
+##
+## helper classes
+##
+class FileSlice(object):
+    """Read delimited file, assumed to be space by default. Lines starting with
+    # are ignored. First line without a # is assumed to contain column headers.
+
+    """
+    def __init__(self, filename, delimiter):
+        """Read and process data file.
+
+        Parametes
+        ---------
+        filename : str
+            Name of file to open.
+        delimiter : str
+            The delimiter used define columns in the data file.
+
+        """
+        self.filename = filename
+        self.delimiter = delimiter
+        
+        # open file and process
+        self.headers = []
+        self.data  = []
+        self._process_file()
+  
+    def _process_file(self):
+        """Process file."""
+    
+        header_line = True
+
+        with open(self.filename, 'r') as f:
+            for line in f:
+                if line.startswith('#'):
+                    pass
+                elif header_line:
+                    header_line = False
+                    try:
+                        self.headers = line.strip().split(self.delimiter)
+                    except:
+                        raise Exception("Problems with delimiter.")
+                else:
+                    try:
+                        line = line.strip().split(self.delimiter)
+                    except:
+                        raise Exception("Problems with delimiter")
+
+                    line = [self._convertType(s) for s in line]
+                    self.data.append(line)
+
+    def _convertType(self, s):
+        """Attempt to convert to int or float, leave as string if
+        exceptions.
+        
+        Parameters
+        ----------
+        s : str
+            Element of line read from text file.
+        
+        Source
+        ------
+        http://bytes.com/topic/python/answers/618346-reading-integer-data-file
+
+        """
+        for func in (int, float):
+            try:
+                n = func(s)
+                return n
+            except:
+                pass
+        return s
+
+    def _get_header_index(self, columnname):
+        """Get the index for the desired column."""
+
+        return self.headers.index(columnname)
+  
+    def get_headers(self):
+        """Get list of column headers."""
+    
+        return self.headers
+    
+    def get_data_point(self, n, columnname):
+        """Get single data point for desired column.
+        
+        Parameters
+        ----------
+        n : int
+            Row number for data point.
+        columnname : str
+            Column name for data point.
+
+        """
+        c_index = self._get_header_index(columnname)
+    
+        return self.data[n][c_index]
+
+    def get_data_column(self, columnname):
+        """Get all data points (rows) for column.
+        
+        Parameters
+        ----------
+        columnname : str
+            Column name.
+
+        """
+        c_index = self._get_header_index(columnname)
+
+        column_data = []
+        for row in self.data:
+            column_data.append(row[c_index])
+    
+        return column_data
+
+    def get_data_columns(self, columns_tuple):
+        """Get all samples for desired set of columns.
+        
+        Parameters
+        ----------
+        columns_tuple : tuple of column names.
+        
+        """
+        c_index = []
+        
+        # get indicies for desired columns
+        for c in columns_tuple:
+            c_index.append(self._get_header_index(c))
+        
+        columns_data = []
+        for row in self.data:
+            temp_col = []
+
+            # get column data for this row
+            for col in c_index:
+                temp_col.append(row[col])
+            
+            # append to complete slice
+            columns_data.append(row[c_index])
+    
+        return columns_data
+
+##
+## helper functions
+##
 def create_parser():
     """Create argparse instance for script.
     
@@ -110,6 +254,9 @@ def get_top_models(basedir, prob_dirs, beta, nM=3):
     
     return topmodels
 
+##
+## cherrypy
+##
 class Root(object):
     
     def __init__(self, args):
@@ -441,7 +588,7 @@ class Root(object):
             for currf in files:
                 if currf.startswith('samples'):
                     filename = os.path.join(focusdir, currf)
-                    samples = datautils.FileSlice(filename, ',')
+                    samples = FileSlice(filename, ',')
         
         # make plot
         from matplotlib.ticker import NullFormatter
